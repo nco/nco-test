@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> exec(std::string &cmd, const std::vector<std::string> &arg);
-int compare(const std::vector<std::string> &out, const std::vector<std::string> &exp);
+std::vector<std::string> exec(std::string cmd, const std::string &arg);
+int compare(const std::vector<std::string> &out, const char **exps);
 
 #endif

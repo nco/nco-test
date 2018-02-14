@@ -22,12 +22,11 @@ void usage()
 
 int main(int argc, char *argv[])
 {
-  std::vector<std::string> exp;
   std::vector<std::string> out;
   std::string path_exe;
   std::string path_data;
   std::string ncks;
-  std::vector<std::string> arg;
+  std::string arg;
 
   if (argc != 5)
   {
@@ -71,27 +70,38 @@ int main(int argc, char *argv[])
   //ncks tests
   /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  arg.push_back("-C --trd -g g6g1 -v area");
-  arg.push_back(path_data);
+  arg = "-C --trd -g g6g1 -v area ";
+  arg += path_data;
 
-  exp.push_back("/g6/g6g1/area");
-  exp.push_back("area: type NC_FLOAT, 1 dimension, 0 attributes, compressed? no, chunked? no, packed? no");
-  exp.push_back("area size (RAM) = 2*sizeof(NC_FLOAT) = 2*4 = 8 bytes");
-  exp.push_back("area dimension 0: /lat, size = 2 NC_FLOAT (Coordinate is /lat)");
-  exp.push_back("");
-  exp.push_back("/g6/g6g1/area");
-  exp.push_back("lat[0]=-90 area[0]=40 (no units)");
-  exp.push_back("lat[1]=90 area[1]=50 (no units)");
-  exp.push_back("");
+  const char* ncks_tst_01[] =
+  {
+    "/g6/g6g1/area",
+    "area: type NC_FLOAT, 1 dimension, 0 attributes, compressed? no, chunked? no, packed? no",
+    "area size (RAM) = 2*sizeof(NC_FLOAT) = 2*4 = 8 bytes",
+    "area dimension 0: /lat, size = 2 NC_FLOAT (Coordinate is /lat)",
+    "",
+    "/g6/g6g1/area",
+    "lat[0]=-90 area[0]=40 (no units)",
+    "lat[1]=90 area[1]=50 (no units)",
+    "",
+    0
+  };
 
   out = exec(ncks, arg);
-  if (compare(out, exp))
+  std::cout << "TESTING " << ncks << " " << arg << " ... ";
+  if (compare(out, ncks_tst_01))
   {
-    std::cout << "test FAILURE" << std::endl;
+    std::cout << "FAILURE" << std::endl;
   }
   else
   {
-    std::cout << "test PASSED" << std::endl;
+    std::cout << "PASSED" << std::endl;
+  }
+
+  std::cout << "OUTPUT" << std::endl;
+  for (int idx = 0; idx < out.size(); idx++)
+  {
+    std::cout << out.at(idx);
   }
 
   return 0;

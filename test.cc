@@ -17,21 +17,17 @@ const int PATH_MAX = 256;
 //uses the popen() function, that creates a bidirectional pipe, 
 //forking, and invoking the shell;
 //popen() returns a pointer to a stream that can be used to either read from or write to the pipe
-//'arg' is a vector with a list of arguments for 'cmd'
+//'arg' is a string with arguments for 'cmd'
 //function returns the output of 'cmd' to stdout as a vector of strings 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::vector<std::string> exec(std::string &cmd, const std::vector<std::string> &arg)
+std::vector<std::string> exec(std::string cmd, const std::string &arg)
 {
   std::vector<std::string> vec;
   char buf[PATH_MAX];
 
-  for (size_t idx = 0; idx < arg.size(); idx++)
-  {
-    cmd += " ";
-    cmd += arg.at(idx);
-  }
-
+  cmd += " ";
+  cmd += arg;
   FILE* fp = popen(cmd.c_str(), "r");
   if (fp == NULL)
   {
@@ -53,22 +49,32 @@ std::vector<std::string> exec(std::string &cmd, const std::vector<std::string> &
 //compares an expected vector of strings with another vector of strings (output)
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int compare(const std::vector<std::string> &out, const std::vector<std::string> &exp)
+int compare(const std::vector<std::string> &out, const char **exps)
 {
-  assert(exp.size() == out.size());
   int nbr = 0;
+
+  std::vector<std::string> exp;
+  while (*exps != 0)
+  {
+    std::string str(*exps);
+    exp.push_back(str);
+    exps++;
+  }
+
+  assert(exp.size() == out.size());
   for (int idx = 0; idx < out.size(); idx++)
   {
     std::string outs = out.at(idx);
     std::string exps = exp.at(idx);
-    std::cout << outs;
     //remove '\n' from output (last character)
     assert(outs.at(outs.size() - 1) == '\n');
     outs = outs.substr(0, outs.size() - 1);
     if (outs.compare(exps) != 0)
     {
-      std::cout << "output differs at line " << idx << std::endl;
-      std::cout << exps;
+      std::cout << "EXPECTED ";
+      std::cout << exps << "\n";
+      std::cout << "RESULT ";
+      std::cout << outs << "\n";;
       nbr++;
     }
   }
