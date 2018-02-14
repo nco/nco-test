@@ -1,0 +1,9 @@
+before_build:
+  - cmake -H. -Bbuild 
+
+build:
+  project: build\nco_test.sln
+  verbosity: minimal
+  
+test_script:
+  - build\Debug\nco_test.exe
