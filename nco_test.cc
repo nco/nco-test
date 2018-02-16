@@ -22,13 +22,13 @@ void usage()
 
 int main(int argc, char *argv[])
 {
-  std::vector<std::string> out;
   std::string path_exe;
   std::string path_data;
   std::string ncks;
   std::string arg;
+  int verbose = 0;
 
-  if (argc != 5)
+  if (argc < 5)
   {
     usage();
   }
@@ -47,6 +47,9 @@ int main(int argc, char *argv[])
         path_data = argv[idx + 1];
         idx++;
         break;
+      case 'v':
+        verbose = 1;
+        break;
       default:
         usage();
       }
@@ -59,11 +62,9 @@ int main(int argc, char *argv[])
 
   ncks = path_exe;
 #ifdef _MSC_VER
-  ncks += "\\";
-  ncks += "ncks.exe";
+  ncks += "\\ncks.exe";
 #else
-  ncks += "/";
-  ncks += "ncks";
+  ncks += "/ncks";
 #endif
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,23 +88,7 @@ int main(int argc, char *argv[])
     0
   };
 
-  out = exec(ncks, arg);
-  std::cout << "TESTING " << ncks << " " << arg << " ... ";
-  if (compare(out, ncks_tst_01))
-  {
-    std::cout << "FAILURE" << std::endl;
-  }
-  else
-  {
-    std::cout << "PASSED" << std::endl;
-  }
-
-  std::cout << "OUTPUT" << std::endl;
-  for (int idx = 0; idx < out.size(); idx++)
-  {
-    std::cout << out.at(idx);
-  }
-
+  test_t test_ncks_01(ncks, arg, ncks_tst_01, verbose);
   return 0;
 }
 

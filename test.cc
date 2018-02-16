@@ -10,7 +10,32 @@
 #define popen _popen
 #define pclose _pclose
 #endif
-const int PATH_MAX = 256;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//test_t
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+test_t::test_t(std::string cmd, const std::string &arg, const char **exps, int verbose)
+{
+  std::vector<std::string> out;
+  out = exec(cmd, arg);
+  std::cout << "TESTING " << cmd << " " << arg << " ... ";
+  if (compare(out, exps))
+  {
+    std::cout << "FAILURE" << std::endl;
+  }
+  else
+  {
+    std::cout << "PASSED" << std::endl;
+  }
+  if (!verbose) return;
+  std::cout << "OUTPUT" << std::endl;
+  for (int idx = 0; idx < out.size(); idx++)
+  {
+    std::cout << out.at(idx);
+  }
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //exec()
@@ -21,9 +46,10 @@ const int PATH_MAX = 256;
 //function returns the output of 'cmd' to stdout as a vector of strings 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::vector<std::string> exec(std::string cmd, const std::string &arg)
+std::vector<std::string> test_t::exec(std::string cmd, const std::string &arg)
 {
   std::vector<std::string> vec;
+  const int PATH_MAX = 256;
   char buf[PATH_MAX];
 
   cmd += " ";
@@ -33,13 +59,11 @@ std::vector<std::string> exec(std::string cmd, const std::string &arg)
   {
     assert(0);
   }
-
   while (fgets(buf, PATH_MAX, fp) != NULL)
   {
     std::string str(buf);
     vec.push_back(str);
   }
-
   pclose(fp);
   return vec;
 }
@@ -49,10 +73,9 @@ std::vector<std::string> exec(std::string cmd, const std::string &arg)
 //compares an expected vector of strings with another vector of strings (output)
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int compare(const std::vector<std::string> &out, const char **exps)
+int test_t::compare(const std::vector<std::string> &out, const char **exps)
 {
   int nbr = 0;
-
   std::vector<std::string> exp;
   while (*exps != 0)
   {
@@ -60,7 +83,6 @@ int compare(const std::vector<std::string> &out, const char **exps)
     exp.push_back(str);
     exps++;
   }
-
   assert(exp.size() == out.size());
   for (int idx = 0; idx < out.size(); idx++)
   {

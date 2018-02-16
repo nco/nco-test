@@ -4,7 +4,7 @@ NCO test suite
 ## Example usage
 
 ```
-./nco_test -p /usr/local/bin -f /home/pvicente/nco/data/in_grp.nc
+./nco_test -p /usr/local/bin -f /home/pvicente/nco/data/in_grp.nc -v
 TESTING /usr/local/bin/ncks -C --trd -g g6g1 -v area /home/pvicente/nco/data/in_grp.nc PASSED
 OUTPUT
 /g6/g6g1/area
