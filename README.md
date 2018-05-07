@@ -1,6 +1,12 @@
 # nco-test
 NCO test suite
 
+## Build
+
+```
+./bld.sh
+```
+
 ## Usage
 
 ```

@@ -2,3 +2,4 @@
 cmake -H. -Bbuild 
 pushd build
 make
+./nco_test
