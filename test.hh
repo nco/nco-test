@@ -7,8 +7,8 @@
 class test_t
 {
 public:
-  test_t(std::string cmd, const std::string &arg, const char **exps, int verbose);
-  std::vector<std::string> exec(std::string cmd, const std::string &arg);
+  test_t(std::string cmd, const std::string &arg, const char **expected, int verbose);
+  std::vector<std::string> exec(const std::string &cmd);
   int compare(const std::vector<std::string> &out, const char **exps);
 };
 

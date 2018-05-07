@@ -1,6 +1,14 @@
 # nco-test
 NCO test suite
 
+## Usage
+
+```
+usage: ./nco_test -p <PATH> -f <FILE>
+PATH: path of NCO executables
+FILE: full path name of netCDF data file to read
+```
+
 ## Example usage
 
 ```

@@ -13,14 +13,21 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //test_t
+//arguments: 
+//'cmd' NCO executable full path 
+//'arg' arguments for NCO executable
+//'expected': expected output as an array of strings (each element is 1 line of output)
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-test_t::test_t(std::string cmd, const std::string &arg, const char **exps, int verbose)
+test_t::test_t(std::string cmd, const std::string &arg, const char **expected, int verbose)
 {
   std::vector<std::string> out;
-  out = exec(cmd, arg);
+
+  cmd += " ";
+  cmd += arg;
+  out = exec(cmd);
   std::cout << "TESTING " << cmd << " " << arg << " ... ";
-  if (compare(out, exps))
+  if (compare(out, expected) > 0)  //returns number of lines of output that differ
   {
     std::cout << "FAILURE" << std::endl;
   }
@@ -36,24 +43,21 @@ test_t::test_t(std::string cmd, const std::string &arg, const char **exps, int v
   }
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //exec()
 //uses the popen() function, that creates a bidirectional pipe, 
 //forking, and invoking the shell;
 //popen() returns a pointer to a stream that can be used to either read from or write to the pipe
-//'arg' is a string with arguments for 'cmd'
+//'cmd' NCO executable full path concatenated with argumants (including data file full path)
 //function returns the output of 'cmd' to stdout as a vector of strings 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::vector<std::string> test_t::exec(std::string cmd, const std::string &arg)
+std::vector<std::string> test_t::exec(const std::string &cmd)
 {
   std::vector<std::string> vec;
-  const int PATH_MAX = 256;
+  const int PATH_MAX = 1024;
   char buf[PATH_MAX];
 
-  cmd += " ";
-  cmd += arg;
   FILE* fp = popen(cmd.c_str(), "r");
   if (fp == NULL)
   {
@@ -71,6 +75,7 @@ std::vector<std::string> test_t::exec(std::string cmd, const std::string &arg)
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //compare()
 //compares an expected vector of strings with another vector of strings (output)
+//returns number of lines of output that differ
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int test_t::compare(const std::vector<std::string> &out, const char **exps)
