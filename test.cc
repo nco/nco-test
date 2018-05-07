@@ -26,7 +26,7 @@ test_t::test_t(std::string cmd, const std::string &arg, const char **expected, i
   cmd += " ";
   cmd += arg;
   out = exec(cmd);
-  std::cout << "TESTING " << cmd << " " << arg << " ... ";
+  std::cout << "TESTING " << cmd << "... ";
   if (compare(out, expected) > 0)  //returns number of lines of output that differ
   {
     std::cout << "FAILURE" << std::endl;
